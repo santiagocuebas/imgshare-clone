@@ -1,0 +1,14 @@
+<nav class="nav">
+	<div class=""></div>
+	<div class="search"><input type="text"></div>
+	{{#if user}}
+	<div>
+		<div><a href="/logout">Logout</a></div>
+	</div>
+	{{else}}
+	<div>
+		<div><a href="/login">Log In</a></div>
+		<div><a href="/signup">Sign Up</a></div>
+	</div>
+	{{/if}}
+</nav>
