@@ -1,3 +1,4 @@
+'use strict'
 
 import passport from 'passport';
 import LocalStrategy from 'passport-local';
@@ -34,17 +35,13 @@ passport.use('local.signup', new LocalStrategy({
 	};
 	newUser.password = await encryptPassword(password);
 	const res = await pool.query('INSERT INTO users Set ? ', [newUser]);
-	newUser.id = res[0].insertId;
 	return done(null, newUser);
 }));
 
-passport.serializeUser((user, done) => {
-	console.log(user)
-	done(null, user.id);
-});
+passport.serializeUser((user, done) => done(null, user.username));
 
-passport.deserializeUser( async (id, done) => {
-	const data = await pool.query('SELECT * FROM users Where id = ?', [id]);
+passport.deserializeUser( async (username, done) => {
+	const data = await pool.query('SELECT * FROM users Where username = ?', [username]);
 	done(null, data[0][0]);
 });
 

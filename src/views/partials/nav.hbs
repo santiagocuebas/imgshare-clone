@@ -1,14 +1,14 @@
 <nav class="nav">
-	<div class=""></div>
-	<div class="search"><input type="text"></div>
+	<img class="nav-img" src="/img/imgshare-logo.png">
+	<div class="nav-search"><input class="nav-input" type="text"><a class=" nav-icon" href=""><i class="fa-solid fa-magnifying-glass"></i></a></div>
 	{{#if user}}
 	<div>
 		<div><a href="/logout">Logout</a></div>
 	</div>
 	{{else}}
-	<div>
-		<div><a href="/login">Log In</a></div>
-		<div><a href="/signup">Sign Up</a></div>
+	<div class="nav-sign">
+		<a class="nav-login" href="/login">Log In</a>
+		<a class="nav-signup" href="/signup">Sign Up</a>
 	</div>
 	{{/if}}
 </nav>

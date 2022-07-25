@@ -1,0 +1,15 @@
+<div class="container">
+	<div class="card">
+		<div class="card-title">
+			<h2 class="u-title"><i class="icon fa-solid fa-image"></i> Upload an Image</h2>
+		</div>
+		<div class="card-body">
+			<form action="/gallery" method="POST" enctype="multipart/form-data">
+				<div class="upload-box file"><input id="upload_image" type="file" class="upload-input" name="image" placeholder="" required><label for="upload_image" class="file-custom"></label></div>
+				<div class="upload-box"><input type="text" class="upload-input" name="title" placeholder="Title for the image" required></div>
+				<div class="upload-box"><textarea class="upload-input" name="description" rows="2" placeholder="Description for the image" required></textarea></div>
+				<div class="upload-box"><button class="upload-btn"><i class="icon fa-solid fa-upload"></i> Upload Image</button></div>
+			</form>
+		</div>
+	</div>
+</div>

@@ -1,7 +1,14 @@
+'use strict'
 
 import { Router } from 'express';
 const router = Router();
 
-router.get('/', (req, res) => res.render('index.hbs'));
+import pool from '../database.js';
+import Image from '../models/image.js';
+
+router.get('/', async (req, res) => {
+	const images = await Image.find().sort({timestamp: 1}).lean({ virtuals: true });
+	res.render('index.hbs', { images });
+});
 
 export default router;

@@ -18,6 +18,8 @@ CREATE TABLE IF NOT EXISTS users (
 
 ALTER TABLE users MODIFY COLUMN `id` int not null auto_increment;
 
-DESCRIBE users;
+alter table users drop primary key;
 
-SELECT * FROM users;
+describe users;
+
+select * from users;

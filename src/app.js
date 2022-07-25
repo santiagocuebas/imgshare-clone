@@ -1,3 +1,4 @@
+'use strict'
 
 import express from 'express';
 import { engine } from 'express-handlebars';
@@ -13,13 +14,15 @@ import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { PORT } from './keys.js';
 import pool from './database.js';
-import * as helpers from './helpers.js';
+import * as helpers from './helpers/time.js';
 import './database.js';
 import './lib/passport.js';
 
 // IndexRoutes
 import iRoutes from './routes/index.js';
 import aRoutes from './routes/auth.js';
+import gRoutes from './routes/gallery.js';
+import uRoutes from './routes/user.js';
 
 // Initializations
 const app = express();
@@ -27,7 +30,7 @@ const sessionStore = new MySQLStore({}, pool);
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // Settings
-app.set('views', join(__dirname, 'views'));
+app.set('views', join(__dirname, './views'));
 app.engine('.hbs', engine({
 	defaultLayout: 'main',
 	layoutsDir: join(app.get('views'), 'layouts'),
@@ -51,7 +54,7 @@ app.use(session({
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(multer({dest: './uploads/'}).single('image'));
+app.use(multer({dest: join(__dirname, './uploads/temp')}).single('image'));
 
 // Global Variables
 app.use((req, res, next) => {
@@ -62,9 +65,12 @@ app.use((req, res, next) => {
 // Routes
 app.use(iRoutes);
 app.use(aRoutes);
+app.use('/gallery', gRoutes);
+app.use('/user', uRoutes);
 
 // Static Files
-app.use(express.static(join(__dirname, 'public')));
+app.use(express.static(join(__dirname, './public')));
+app.use('/uploads', express.static(join(__dirname, './uploads')));
 
 // Error Handling
 if ('development' === process.env.NODE_ENV) app.use(error());
