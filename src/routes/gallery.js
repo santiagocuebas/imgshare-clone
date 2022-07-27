@@ -17,7 +17,7 @@ router.post('/', (req, res) => {
 		if (images.length > 0) saveImage();
 		const tempPath = req.file.path;
 		const ext = extname(req.file.originalname).toLowerCase();
-		const targetPath  = resolve(`src/uploads/${imgURL}${ext}`);
+		const targetPath  = resolve(`src/public/uploads/${imgURL}${ext}`);
 		if (ext === '.png' || ext === '.jpg' || ext === '.jpeg' || ext === '.gif') {
 			await fs.rename(tempPath, targetPath);
 			const newImg = new Image({

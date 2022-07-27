@@ -14,7 +14,6 @@ const imageSchema = new Schema(
 		views: {type: Number, default: 0},
 		likes: {type: Number, default: 0},
 		dislikes: {type: Number, default: 0},
-		timestamp: {type: Date, default: Date.now},
 		author: {type: String, default: 'Master'},
 		avatar: {type: String, default: 'default.png'}
 	},

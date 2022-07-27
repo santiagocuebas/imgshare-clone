@@ -1,21 +1,21 @@
 'use strict'
 
 import mongoose from 'mongoose';
-import { createPool } from 'mysql2/promise';
 
-import { mongoDB, sqlDB } from './keys.js';
+import { mongoDB } from './keys.js';
+import sequelize from './sequelize.js';
+import User from './models/user.js';
 
-const pool = await createPool(sqlDB);
+const mongod = await mongoose.connect(mongoDB.URI);
 
-mongoose.connect(mongoDB.URI)
-	.then(() => console.log('MongoDB Database is Connected'))
-	.catch(err => console.error(err));
+if (mongod) console.log('MongoDB Database is Connected');
+else console.error('Ha ocurrido un error con ', mongod);
 
-pool.getConnection()
-  .then(conn => {
-    conn.release();
+try {
+	await sequelize.authenticate();
 	console.log('SQL Database is Connected');
-    return;
-  }).catch(err => console.log(err));
-
-export default pool;
+	const created = sequelize.sync({ force: true });
+	if (created) console.log('==>Table done!');
+} catch (e) {
+	console.error(e);
+}

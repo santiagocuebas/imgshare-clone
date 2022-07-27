@@ -7,12 +7,12 @@ const { Schema, model } = pkg;
 const commentSchema = new Schema(
 	{
 		image_id: {type: Schema.Types.ObjectId},
-		author: {type: String, default: 'Master'},
+		sender: {type: String, default: 'Master'},
 		avatar: {type: String, default: 'default.png'},
+		receiver: {type: String},
 		comment: {type: String},
 		like: {type: Number, default: 0},
-		dislike: {type: Number, default: 0},
-		timestamp: {type: Date, default: Date.now}
+		dislike: {type: Number, default: 0}
 	},
 	{
 		versionKey: false

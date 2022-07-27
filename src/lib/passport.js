@@ -1,9 +1,10 @@
 'use strict'
 
+import { Op } from 'sequelize';
 import passport from 'passport';
 import LocalStrategy from 'passport-local';
 
-import pool from '../database.js';
+import User from '../models/user.js';
 import { encryptPassword, matchPassword } from './crypt.js';
 
 passport.use('local.login', new LocalStrategy({
@@ -11,10 +12,14 @@ passport.use('local.login', new LocalStrategy({
 	passwordField: 'password',
 	passReqToCallback: true
 }, async (req, username, password, done) => {
-	const data = await pool.query('SELECT * FROM users Where username = ? OR email = ?', [username, username]);
-	const data2 = data[0];
-	if (data2.length > 0) {
-		const user = data2[0];
+	const user = await User.findAll({where: { 
+			[Op.or]: [
+				{ username: username },
+				{ email: username }
+			]
+		}
+	});
+	if (user) {
 		const match = await matchPassword(password, user.password);
 		if (match) done(null, user);
 		else done(null, false);
@@ -26,23 +31,22 @@ passport.use('local.signup', new LocalStrategy({
 	passwordField: 'password',
 	passReqToCallback: true
 }, async (req, username, password, done) => {
-	const { email, phone_number } = req.body;
+	const { email } = req.body;
 	const newUser = {
 		email,
 		password,
-		username,
-		phone_number
+		username
 	};
 	newUser.password = await encryptPassword(password);
-	const res = await pool.query('INSERT INTO users Set ? ', [newUser]);
+	await User.create(newUser);
 	return done(null, newUser);
 }));
 
 passport.serializeUser((user, done) => done(null, user.username));
 
 passport.deserializeUser( async (username, done) => {
-	const data = await pool.query('SELECT * FROM users Where username = ?', [username]);
-	done(null, data[0][0]);
+	const user = await User.findAll({where: {username: {username: username}}})
+	done(null, user);
 });
 
 export default passport;

@@ -3,7 +3,7 @@
 import express from 'express';
 import { engine } from 'express-handlebars';
 import session from 'express-session';
-import MySQLStore from 'express-mysql-session';
+import SequelizeStore from 'connect-session-sequelize';
 import logger from 'morgan';
 import passport from 'passport';
 import flash from 'connect-flash';
@@ -13,9 +13,9 @@ import multer from 'multer';
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { PORT } from './keys.js';
-import pool from './database.js';
+import sequelize from './sequelize.js';
 import * as helpers from './helpers/time.js';
-import './database.js';
+import './models/user.js';
 import './lib/passport.js';
 
 // IndexRoutes
@@ -26,7 +26,8 @@ import uRoutes from './routes/user.js';
 
 // Initializations
 const app = express();
-const sessionStore = new MySQLStore({}, pool);
+const SS = SequelizeStore(session.Store);
+const myStore = new SS({db: sequelize});
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // Settings
@@ -47,14 +48,14 @@ app.use(express.json());
 app.use(session({
 	key: 'unaclavecualquiera',
 	secret: 'unacontraseñacualquiera',
-	store: sessionStore,
+	store: myStore,
 	resave: false,
 	saveUninitialized: false
 }));
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(multer({dest: join(__dirname, './uploads/temp')}).single('image'));
+app.use(multer({dest: join(__dirname, './public/uploads/temp')}).single('image'));
 
 // Global Variables
 app.use((req, res, next) => {

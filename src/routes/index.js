@@ -3,7 +3,6 @@
 import { Router } from 'express';
 const router = Router();
 
-import pool from '../database.js';
 import Image from '../models/image.js';
 
 router.get('/', async (req, res) => {
