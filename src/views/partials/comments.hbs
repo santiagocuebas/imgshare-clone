@@ -1,0 +1,13 @@
+<div class="box-comments">
+	<div class="order-comments"><p>{{comments.length}} Comments</p></div>
+	<div class="comments">
+		{{#each comments}}
+			<div class="comment">
+				<div class="comment-img"><img src="/uploads/avatars/default.png"></div>
+				<div class="comment-author"><a href="/user/{{author}}">{{author}}</a> {{timeago createdAt}}</div>
+				<div class="comment-description">{{comment}}</div>
+				<p class="comment-like"><i class="fa-solid fa-thumbs-up"></i> {{like}}    <i class="fa-solid fa-thumbs-down"></i> {{dislike}}</p>
+			</div>
+		{{/each}}
+	</div>
+</div>

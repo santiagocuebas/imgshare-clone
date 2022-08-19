@@ -7,9 +7,16 @@ import { random } from '../helpers/random.js';
 import Image from '../models/image.js';
 import Comment from '../models/comment.js';
 
+import { isLoggedIn } from '../lib/logged.js';
+
 const router = Router();
 
-router.post('/', (req, res) => {
+router.get('/', async (req, res) => {
+	const images = await Image.find().sort({timestamp: 1}).lean({ virtuals: true });
+	res.render('index.hbs', { images });
+});
+
+router.post('/', isLoggedIn, (req, res) => {
 	const user = req.user;
 	const saveImage = async () => {
 		const imgURL = random();
@@ -78,7 +85,7 @@ router.post('/:image_id/comment', async (req, res) => {
 router.delete('/:image_id', async (req, res) => {
 	const image = await Image.findOne({filename: {$regex: req.params.image_id}});
 	if (image) {
-		await fs.unlink(`./src/uploads/${image.filename}`);
+		await fs.unlink(`./src/public/uploads/${image.filename}`);
 		await Comment.deleteOne({image_id: image._id});
 		await image.remove();
 		res.json('http://localhost:3000/');

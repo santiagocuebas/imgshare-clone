@@ -1,24 +1,19 @@
 'use strict'
 
-import { DataTypes, Model } from 'sequelize';
+import { DataTypes } from 'sequelize';
 import sequelize from '../sequelize.js';
 
-class User extends Model {};
-
-User.init({
+const User = sequelize.define('User', {
 	username: {type: DataTypes.STRING, allowNull: false, primaryKey: true},
 	email: {type: DataTypes.STRING, allowNull: false, unique: true},
 	password: {type: DataTypes.STRING, allowNull: false},
-	phone_number: {type: DataTypes.STRING},
-	description: {type: DataTypes.TEXT}
+	phone_number: {type: DataTypes.STRING, defaultValue: ''},
+	description: {type: DataTypes.TEXT, defaultValue: ''},
+	avatar: {type: DataTypes.STRING, defaultValue: 'default.png'}
 }, {
-	sequelize,
-	underscored: true,
+	tableName: 'User',
 	timestamps: true,
-	modelName: 'User'
+	underscored: true
 });
-
-User.sync({ alter: true });
-console.log('==> The table User model was (Re)created!');
 
 export default User;

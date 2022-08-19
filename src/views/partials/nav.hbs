@@ -1,6 +1,11 @@
 <nav class="nav">
-	<img class="nav-img" src="/img/imgshare-logo.png">
-	<div class="nav-search"><input class="nav-input" type="text"><a class=" nav-icon" href=""><i class="fa-solid fa-magnifying-glass"></i></a></div>
+	<div class="nav-img"><a href="/"><img src="/img/imgshare-logo.png"></a></div>
+	<div class="nav-search">
+		<form action="/search">
+			<input type="text" class="nav-input" name="q" placeholder="Search">
+			<button class="nav-btn" href="/gallery" aria-label="Search" ><i class="fa-solid fa-magnifying-glass"></i></button>
+		</form>
+	</div>
 	{{#if user}}
 	<div>
 		<div><a href="/logout">Logout</a></div>

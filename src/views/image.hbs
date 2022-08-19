@@ -1,12 +1,12 @@
 <div class="container white">
 	<div class="main-image">
 		<div class="container-image">
-			<h1>{{image.title}} <button class="btn-delete">Delete</button></h1>
+			<h1>{{image.title}} {{#if (isTrue user image.author)}}<button class="btn-delete" data-id="{{image.uniqueId}}">Delete</button>{{/if}} </h1>
 			<div>
 				<p><a href="/user/{{image.author}}">{{image.author}}</a></p>
-				<p><i class="fa-solid fa-eye"></i> {{image.views}} | {{timeago image.timestamp}}</p>
+				<p><i class="fa-solid fa-eye"></i> {{image.views}} | {{timeago image.createdAt}}</p>
 			</div>
-			<img src="/public/uploads/{{image.filename}}" class="img">
+			<img src="/uploads/{{image.filename}}" class="img">
 			<div>
 				<i id="like" data-id="{{image.uniqueId}}" class="fa-solid fa-thumbs-up"></i> <i id="c-likes">{{image.likes}}</i> <i id="dislike" data-id="{{image.filename}}" class="fa-solid fa-thumbs-down"></i> {{image.dislikes}}
 			</div>
@@ -23,19 +23,7 @@
 				<div class="comment-noregister"><p>Register to comment!</p><a class="comment-login" href="/login">Log In</a><a class="comment-signup" href="/signup">Sign Up</a></div>
 				{{/if}}
 			</div>
-			<div class="box-comments">
-				<div class="order-comments"><p>{{comments.length}} Comments</p></div>
-				<div class="comments">
-				{{#each comments}}
-					<div class="comment">
-						<div class="comment-img"><img src="/public/uploads/avatars/default.png"></div>
-						<div class="comment-author"><a href="/user/{{author}}">{{author}}</a> {{timeago timestamp}}</div>
-						<div class="comment-description">{{comment}}</div>
-						<p class="comment-like"><i class="fa-solid fa-thumbs-up"></i> {{like}}    <i class="fa-solid fa-thumbs-down"></i> {{dislike}}</p>
-					</div>
-				{{/each}}
-				</div>
-			</div>
+			{{> comments}}
 		</div>
 	</div>
 </div>

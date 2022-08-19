@@ -15,7 +15,7 @@ import { fileURLToPath } from 'url';
 import { PORT } from './keys.js';
 import sequelize from './sequelize.js';
 import * as helpers from './helpers/time.js';
-import './models/user.js';
+import './database.js';
 import './lib/passport.js';
 
 // IndexRoutes
@@ -26,8 +26,8 @@ import uRoutes from './routes/user.js';
 
 // Initializations
 const app = express();
-const SS = SequelizeStore(session.Store);
-const myStore = new SS({db: sequelize});
+const newSequelizeStore = SequelizeStore(session.Store);
+const myStore = new newSequelizeStore({db: sequelize});
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // Settings
@@ -51,7 +51,7 @@ app.use(session({
 	store: myStore,
 	resave: false,
 	saveUninitialized: false
-}));
+})); myStore.sync();
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
@@ -59,7 +59,11 @@ app.use(multer({dest: join(__dirname, './public/uploads/temp')}).single('image')
 
 // Global Variables
 app.use((req, res, next) => {
-	app.locals.user = req.user;
+	app.locals.message = {
+		username: req.flash('message.username'),
+		password: req.flash('message.password')
+	};
+	app.locals.user = req.user || null;
 	next();
 });
 

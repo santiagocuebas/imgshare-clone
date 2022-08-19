@@ -1,15 +1,2 @@
-<div class="container">
-	<div class="container-gallery">
-		<div></div>
-		<div class="gallery">
-			{{#each images}}
-			<div class="box">
-				<a href="/gallery/{{uniqueId}}" class="gallery-link">
-					<div class="gallery-text"><h2>{{title}}</h2></div>
-				</a>
-				<img src="/uploads/{{filename}}" class="gallery-image">
-			</div>
-			{{/each}}
-		</div>
-	</div>
-</div>
+
+{{> images}}

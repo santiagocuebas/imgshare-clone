@@ -1,8 +1,8 @@
 <div class="container-user-head">
 	<div class="user-name">
-		<div class="user-img"><img src="/public/uploads/avatars/default.png"></div>
+		<div class="user-img"><img src="/uploads/avatars/{{foreignUser.avatar}}"></div>
 			<div>
-				<h1 class="user-title">{{user.username}}</h1>
+				<h1 class="user-title">{{foreignUser.username}}</h1>
 				<div>
 					{{#if user}}
 					<a class="user-link" href=""><i class="fa-solid fa-file-arrow-up"></i> UPLOAD</a>
@@ -18,18 +18,4 @@
 		</div>
 	</div>
 </div>
-<div class="container">
-	<div class="container-gallery">
-		<div></div>
-		<div class="gallery">
-			{{#each images}}
-			<div class="box">
-				<a href="/gallery/{{uniqueId}}" class="gallery-link">
-					<div class="gallery-text"><h2>{{title}}</h2></div>
-				</a>
-				<img src="/public/uploads/{{filename}}" class="gallery-image">
-			</div>
-			{{/each}}
-		</div>
-	</div>
-</div>
+{{> images}}

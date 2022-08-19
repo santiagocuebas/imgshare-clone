@@ -6,46 +6,52 @@ import LocalStrategy from 'passport-local';
 
 import User from '../models/user.js';
 import { encryptPassword, matchPassword } from './crypt.js';
+import '../database.js';
 
-passport.use('local.login', new LocalStrategy({
+passport.use('login', new LocalStrategy({
 	usernameField: 'username',
 	passwordField: 'password',
 	passReqToCallback: true
 }, async (req, username, password, done) => {
-	const user = await User.findAll({where: { 
+	console.log(req.flash());
+	const data = await User.findOne({where: { 
 			[Op.or]: [
 				{ username: username },
 				{ email: username }
 			]
 		}
 	});
-	if (user) {
+	if (data) {
+		const user = data.dataValues;
 		const match = await matchPassword(password, user.password);
 		if (match) done(null, user);
-		else done(null, false);
-	} else return done(null, false);
+		else return done(null, false, req.flash('message.password', 'Incorrect password'));
+	} else return done(null, false, req.flash('message.username', 'The username no exists'));
 }));
 
-passport.use('local.signup', new LocalStrategy({
+passport.use('signup', new LocalStrategy({
 	usernameField: 'username',
 	passwordField: 'password',
 	passReqToCallback: true
 }, async (req, username, password, done) => {
 	const { email } = req.body;
-	const newUser = {
+	const newPassword = await encryptPassword(password);
+	const user = await User.create({
+		username,
 		email,
-		password,
-		username
-	};
-	newUser.password = await encryptPassword(password);
-	await User.create(newUser);
+		password: newPassword
+	});
+	const newUser = user.toJSON();
 	return done(null, newUser);
 }));
 
-passport.serializeUser((user, done) => done(null, user.username));
+passport.serializeUser((user, done) => {
+	done(null, user.username);
+});
 
 passport.deserializeUser( async (username, done) => {
-	const user = await User.findAll({where: {username: {username: username}}})
+	const data = await User.findOne({where: {username: username}});
+	const user = data.dataValues;
 	done(null, user);
 });
 
