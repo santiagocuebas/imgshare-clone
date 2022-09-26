@@ -1,0 +1,43 @@
+<div class="index-about">
+  <div class="main-about">
+    {{#if fUser.description}}
+    <div class="section-about">
+      <div class="title-section-about">
+        Description
+      </div>
+      <div class="description-about">
+        {{fUser.description}}
+      </div>
+    </div>
+    {{/if}}
+    {{#if fUser.links}}
+    <div class="section-about">
+      <div class="title-section-about">
+        Links
+      </div>
+      <div class="links-about">
+				{{#each (allLinks fUser.links)}}
+				<div class="link-container-about">
+          <a class="link-about" href="{{url}}" target="_blank">
+            {{title}}
+          </a>
+        </div>
+				{{/each}}
+      </div>
+    </div>
+    {{/if}}
+  </div>
+  <div class="sidebar-about">
+    <div class="statistics-about">
+      Statistics
+    </div>
+    <div class="statistics-about">
+       Joined at {{getCreateYear fUser.createdAt}}
+    </div>
+    {{#if fUser.totalViews}}
+    <div class="statistics-about">
+      {{fUser.totalViews}} views
+    </div>
+    {{/if}}
+  </div>
+</div>

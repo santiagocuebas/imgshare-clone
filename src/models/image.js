@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 import pkg from 'mongoose';
 import MLV from 'mongoose-lean-virtuals';
@@ -8,14 +8,14 @@ const { Schema, model } = pkg;
 
 const imageSchema = new Schema(
 	{
-		title: {type: String, required: true, trim: true},
-		description: {type: String, trim: true},
-		filename: {type: String},
-		views: {type: Number, default: 0},
-		likes: {type: Number, default: 0},
-		dislikes: {type: Number, default: 0},
-		author: {type: String, default: 'Master'},
-		avatar: {type: String, default: 'default.png'}
+		title: { type: String, required: true, trim: true },
+		description: { type: String, trim: true },
+		filename: { type: String },
+		views: { type: Number, default: 0 },
+		like: [{ type: String }],
+		dislike: [{ type: String }],
+		author: { type: String },
+		avatar: { type: String, default: 'default.png' }
 	},
 	{
 		versionKey: false,
@@ -25,8 +25,16 @@ const imageSchema = new Schema(
 
 imageSchema.plugin(MLV);
 
-imageSchema.virtual('uniqueId').get(function() {
+imageSchema.virtual('uniqueId').get(function () {
 	return this.filename.replace(extname(this.filename), '');
+});
+
+imageSchema.virtual('totalLikes').get(function () {
+	return this.like.length;
+});
+
+imageSchema.virtual('totalDislikes').get(function () {
+	return this.dislike.length;
 });
 
 export default model('Image', imageSchema);

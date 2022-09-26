@@ -1,0 +1,75 @@
+
+/* FORM */
+
+.logo-sign {
+	width: fit-content;
+	margin: 30px auto;
+}
+
+.sign {
+	margin: 0 auto;
+	width: min-content;
+	height: min-content;
+}
+
+.title-sign {
+	font-weight: 500;
+	text-align: center;
+	margin: 8px;
+}
+
+.body-sign {
+	display: flex;
+	flex-wrap: wrap;
+	padding: 20px;
+	gap: 20px;
+	border-radius: 4px;
+	background-color: #ffffff;
+}
+
+.box-sign {
+	min-width: 400px;
+}
+
+.input-sign {
+	width: 100%;
+	padding: 10px;
+	border: none;
+	border-radius: 4px;
+	outline: 1px solid #cccccc;
+}
+
+.input-sign:focus {
+	outline: 1px solid #64a6c8;
+}
+
+.button-sign {
+	display: block;
+	margin-left: auto;
+	margin-top: 10px;
+	padding: 12px 24px;
+	border: none;
+	background-color: #2db591;
+	font-size: 20px;
+	font-weight: 700;
+	color: #ffffff;
+}
+
+.button-sign:hover {
+	background-color: #2dc991;
+}
+
+.error-sign {
+	display: flex;
+	padding: 6px 12px;
+	border: 2px solid #975858;
+	border-radius: 4px;
+	background: #d76868;
+	color: #500;
+	font-weight: 700;
+}
+
+.i-sign {
+	align-self: center;
+	margin-left: auto;
+}

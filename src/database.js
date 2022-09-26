@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 import mongoose from 'mongoose';
 
@@ -11,7 +11,7 @@ if (mongod) console.log('MongoDB Database is Connected');
 else console.error('Ha ocurrido un error con ', mongod);
 
 try {
-	await sequelize.sync({ force: false });
+	await sequelize.sync({ alter: false });
 	console.log('SQL Database is Connected');
 } catch (e) {
 	console.error(e);

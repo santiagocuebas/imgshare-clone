@@ -1,13 +1,41 @@
-<div class="box-comments">
-	<div class="order-comments"><p>{{comments.length}} Comments</p></div>
-	<div class="comments">
-		{{#each comments}}
-			<div class="comment">
-				<div class="comment-img"><img src="/uploads/avatars/default.png"></div>
-				<div class="comment-author"><a href="/user/{{author}}">{{author}}</a> {{timeago createdAt}}</div>
-				<div class="comment-description">{{comment}}</div>
-				<p class="comment-like"><i class="fa-solid fa-thumbs-up"></i> {{like}}    <i class="fa-solid fa-thumbs-down"></i> {{dislike}}</p>
+<div class="index-comments">
+	{{#each comments}}
+	<div id="{{id}}" class="comment">
+		<div class="image-comment">
+			<a href="/user/{{sender}}">
+				<img class="avatar-comment" src="/uploads/avatars/{{avatar}}">
+			</a>
+		</div>
+		<div class="content-comment">
+			<div class="author-comment">
+				<a href="/user/{{sender}}" class="link-comment">
+					{{sender}}
+				</a>
+				{{timeago createdAt}}
 			</div>
-		{{/each}}
+			<div class="description-comment">
+				{{comment}}
+			</div>
+			<div class="likes-comment">
+				<i class="fa-regular fa-thumbs-up"></i>
+				<p class="like-comment">
+					{{totalLikes}}
+				</p>
+				<i class="fa-regular fa-thumbs-down"></i>
+				<p class="dislike-comment">
+					{{totalDislikes}}
+				</p>
+			</div>
+		</div>
+		<div class="menu-comment">
+			{{#if (isTrue user.username sender)}}
+				<div class="container-icon-comment" data-id="{{id}}" data-dir="{{image_dir}}">
+					<div class="icon-comment">
+						<i class="fa-solid fa-ellipsis-vertical"></i>
+					</div>
+				</div>
+			{{/if}}
+		</div>
 	</div>
+	{{/each}}
 </div>

@@ -1,2 +1,21 @@
 
-{{> images}}
+<div class="main-container">
+	<div class="secondary-container">
+		<div class="logo-gallery">
+			<h1 class="text-logo-gallery">
+				<p>Welcome to </p>
+				<img src="/img/imgshare-logo.png" alt="principal-image">
+			</h1>
+		</div>
+		<div class="container-gallery">
+			<div class="order-gallery">
+				{{comments.length}} IMAGES
+				<div class="select-gallery">
+					<p class="text-select-gallery">NEWEST</p>
+					<i class="fa-solid fa-caret-down"></i>
+				</div>
+			</div>
+			{{> images}}
+		</div>
+	</div>
+</div>

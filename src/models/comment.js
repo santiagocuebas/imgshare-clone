@@ -1,30 +1,35 @@
-'use strict'
+'use strict';
 
 import pkg from 'mongoose';
+import MLV from 'mongoose-lean-virtuals';
 
 const { Schema, model } = pkg;
 
 const commentSchema = new Schema(
 	{
-		image_id: {type: Schema.Types.ObjectId},
-		sender: {type: String, default: 'Master'},
-		avatar: {type: String, default: 'default.png'},
-		receiver: {type: String},
-		comment: {type: String},
-		like: {type: Number, default: 0},
-		dislike: {type: Number, default: 0}
+		id: { type: Number },
+		image_dir: { type: String },
+		sender: { type: String },
+		avatar: { type: String },
+		receiver: { type: String },
+		comment: { type: String },
+		like: [{ type: String }],
+		dislike: [{ type: String }]
 	},
 	{
-		versionKey: false
+		versionKey: false,
+		timestamps: true
 	}
 );
 
-commentSchema.virtual('image')
-	.set(function(image) {
-		this._image = image;
-	})
-	.get(function() {
-		return this._image;
-	});
+commentSchema.plugin(MLV);
+
+commentSchema.virtual('totalLikes').get(function () {
+	return this.like.length;
+});
+
+commentSchema.virtual('totalDislikes').get(function () {
+	return this.dislike.length;
+});
 
 export default model('Comment', commentSchema);

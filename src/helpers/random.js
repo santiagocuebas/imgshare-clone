@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 export const random = () => {
 	const possible = 'aAbBcCdDeEfFgGhHiIjJkKlLmMnNoOpPqQrRsStTuUvVwWxXyYzZ0123456789';

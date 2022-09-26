@@ -1,92 +1,101 @@
-'use strict'
+'use strict';
 
 import { Router } from 'express';
 import passport from 'passport';
-import { body, validationResult } from 'express-validator';
-
+import { Op } from 'sequelize';
+import { check, validationResult } from 'express-validator';
 import { isLoggedIn, isNotLoggedIn } from '../lib/logged.js';
-import User from '../models/user.js';
+import { matchPassword } from '../lib/crypt.js';
+import { User } from '../models/index.js';
 
 const router = Router();
 
+const getUser = value => {
+	return User.findOne({
+		where: {
+			[Op.or]: [
+				{ username: value },
+				{ email: value }
+			]
+		}
+	});
+};
+
+const getErrors = (value, errors) => {
+	const message = {};
+	const values = {
+		username: value.username,
+		email: value?.email
+	};
+	for (const e of errors) {
+		message[e.param] = e.msg;
+	};
+	return { message, values };
+};
+
 router.get('/signup', isNotLoggedIn, (req, res) => res.render('auth/signup'));
 
-router.post('/signup', isNotLoggedIn, [
-		body('username', 'Enter a valid username')
-			.exists({checkFalsy: true}).bail()
-			.isLength({max: 255}).bail()
-			.custom(value => {
-				return User.findOne({where: {username: value}}).then(user => {
-					if (user) return Promise.reject('Username already in use');
-				});
-			}),
-		body('email', 'Enter a valid email')
-			.exists({checkFalsy: true}).bail()
-			.isLength({max: 255}).bail()
-			.isEmail().bail()
-			.custom(value => {
-				return User.findOne({where: {email: value}}).then(user => {
-					if (user) return Promise.reject('E-mail already in use');
-				});
-			}),
-		body('password', 'Enter a valid password')
-			.exists({checkFalsy: true}).bail()
-			.matches(/\d/).withMessage('Password must contain a number').bail()
-			.isLength({min: 4, max:255}).withMessage('Password must contain at least 5 characters'),
-		body('confirm_password')
-			.custom((value, {req}) => {
-				if (value !== req.body.password) throw new Error('Password not match');
-				return true;
-			})
-	], (req, res, next) => {
+router.post('/signup', isNotLoggedIn,
+	check('username', 'Enter a valid username')
+		.exists({ checkFalsy: true }).bail()
+		.isLength({ max: 255 }).bail()
+		.custom(async value => {
+			const user = await User.findOne({ where: { username: value } });
+			if (user) throw new Error('Username already in use');
+			return true;
+		}),
+	check('email', 'Enter a valid e-mail')
+		.exists({ checkFalsy: true }).bail()
+		.isLength({ max: 255 }).bail()
+		.isEmail().bail()
+		.custom(async value => {
+			const user = await User.findOne({ where: { email: value } });
+			if (user) throw new Error('E-mail already in use');
+			return true;
+		}),
+	check('password', 'Enter a valid password')
+		.exists({ checkFalsy: true }).bail()
+		.matches(/\d/).withMessage('Password must contain a number').bail()
+		.isLength({ min: 4, max: 255 }).withMessage('Password must contain at least 5 characters'),
+	check('confirm_password')
+		.custom((value, { req }) => {
+			if (value !== req.body.password) throw new Error('Password not match');
+			return true;
+		}),
+	(req, res, next) => {
 		const err = validationResult(req);
-		if (!err.isEmpty()) {
-			const message = {};
-			const values = {
-				username: req.body.username,
-				email: req.body.email
-			};
-			for (const error of err.array()) {
-				message[error.param] = error.msg;
-			};
-			res.render('auth/signup.hbs', { values, message });
-		} else {
-			passport.authenticate('signup', {
-				successRedirect: '/',
-				failureRedirect: '/signup',
-				failureFlash: true
-			})(req, res, next);
-		};
-});
+		if (!err.isEmpty()) res.render('auth/signup', getErrors(req.body, err.array()));
+		else passport.authenticate('signup', { successRedirect: '/' })(req, res, next);
+	}
+);
 
 router.get('/login', isNotLoggedIn, (req, res) => res.render('auth/login'));
 
-router.post('/login', isNotLoggedIn, [
-		body('username', 'Enter a valid username')
-			.exists({checkFalsy: true}).bail()
-			.isLength({max: 255}).bail(),
-		body('password', 'Enter a valid password')
-			.exists({checkFalsy: true}).bail()
-			.isLength({min: 4, max: 255}).bail()
-	], (req, res, next) => {
+router.post('/login', isNotLoggedIn,
+	check('username', 'Enter a valid username')
+		.exists({ checkFalsy: true }).bail()
+		.isLength({ max: 255 }).bail()
+		.custom(async value => {
+			const user = await getUser(value);
+			if (!user) throw new Error('The user no exists');
+			return true;
+		}),
+	check('password', 'Enter a valid password')
+		.exists({ checkFalsy: true }).bail()
+		.isLength({ min: 4, max: 255 }).bail()
+		.custom(async (value, { req }) => {
+			const user = await getUser(req.body.username);
+			let match = false;
+			if (user !== null) match = await matchPassword(value, user.dataValues.password);
+			if (!match) throw new Error('Incorrect password');
+			return true;
+		}),
+	(req, res, next) => {
 		const err = validationResult(req);
-		if (!err.isEmpty()) {
-			const message = {};
-			const values = {
-				username: req.body.username
-			};
-			for (const error of err.array()) {
-				message[error.param] = error.msg;
-			}
-			res.render('auth/login.hbs', { message, values });
-		} else {
-			passport.authenticate('login', {
-				successRedirect: '/',
-				failureRedirect: '/login',
-				failureFlash: true
-			})(req, res, next);
-		};
-});
+		if (!err.isEmpty()) res.render('auth/login', getErrors(req.body, err.array()));
+		else passport.authenticate('login', { successRedirect: '/' })(req, res, next);
+	}
+);
 
 router.get('/logout', isLoggedIn, (req, res, next) => {
 	req.logout(err => {

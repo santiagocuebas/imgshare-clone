@@ -1,0 +1,104 @@
+
+/* INDEX COMMENTS */
+
+.comment {
+	display: grid;
+	position: relative;
+	grid-template-columns: 48px repeat(11, 1fr);
+	width: 100%;
+	margin-top: 20px;
+	gap: 5px;
+	z-index: 50;
+}
+
+.image-comment {
+	grid-row: 1 / span 3;
+}
+
+.avatar-comment {
+	width: 36px;
+	height: 36px;
+}
+
+.content-comment {
+	grid-column: 2 / span 10;
+}
+
+.author-comment {
+	width: 100%;
+}
+
+.link-comment {
+	font-weight: 600;
+}
+
+.description-comment {
+	width: 100%;
+}
+
+.likes-comment {
+	display: flex;
+	width: 100%;
+	margin: 10px 0;
+	gap: 3px;
+}
+
+.like-comment, .dislike-comment {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 16px;
+	height: 16px;
+}
+
+.menu-comment {
+	grid-column: 12 / span 1;
+	grid-row: 1 / span 3;
+	position: relative;
+	z-index: 150;
+}
+
+.container-icon-comment {
+	display: flex;
+	justify-content: flex-end;
+	width: 100%;
+	height: fit-content;
+}
+
+.icon-comment {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 36px;
+	height: 36px;
+	border-radius: 50%;
+	cursor: pointer;
+}
+
+.icon-comment:active {
+	background-color: #dddddd;
+}
+
+.menu-box-comment {
+	position: absolute;
+	width: fit-content;
+	margin-top: 36px;
+	padding: 6px 0;
+	outline: 1px solid #cccccc;
+	border-radius: 3px;
+	background-color: #ffffff;
+	font-size: 16px;
+	z-index: 100;
+}
+
+.delete-comment {
+	right: -20px;
+	padding: 6px 30px;
+	font-weight: 600;
+	cursor: pointer;
+}
+
+.delete-comment:hover {
+	background-color: #e92323;
+	color: #ffffff;
+}

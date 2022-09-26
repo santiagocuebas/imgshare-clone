@@ -1,0 +1,74 @@
+<div class="main-container">
+	<div class="secondary-container">
+		<div class="header-user">
+			<div class="name-user">
+				<div class="img-user">
+					<img src="/uploads/avatars/{{fUser.avatar}}" class="avatar-user">
+				</div>
+				<div>
+					<h1 class="title-user">
+						{{fUser.username}}
+					</h1>
+					<div>
+						<a class="link-user" href="">
+							<i class="fa-solid fa-comments"></i>
+							CHAT
+						</a>
+						{{#if (isTrue user.username fUser.username)}}
+						<a class="link-user" href="/user/{{user.username}}/upload">
+							<i class="fa-solid fa-file-arrow-up"></i>
+							UPLOAD
+						</a>
+						<a class="link-user" href="/user/{{user.username}}/settings">
+							<i class="fa-solid fa-gear"></i>
+							SETTINGS
+						</a>
+						{{/if}}
+					</div>
+				</div>
+			</div>
+			<div class="list-user">
+			{{#if images}}
+				<a class="link-user underline-user" href="/user/{{fUser.username}}/post">
+					POST
+				</a>
+			{{else}}
+				<a class="link-user" href="/user/{{fUser.username}}/post">
+					POST
+				</a>
+			{{/if}}
+			{{#if comments}}
+				<a class="link-user underline-user" href="/user/{{fUser.username}}/comments">
+					COMMENT
+				</a>
+			{{else}}
+				<a class="link-user" href="/user/{{fUser.username}}/comments">
+					COMMENT
+				</a>
+			{{/if}}
+			{{#if about}}
+				<a class="link-user underline-user" href="/user/{{fUser.username}}/about">
+					ABOUT
+				</a>
+			{{else}}
+				<a class="link-user" href="/user/{{fUser.username}}/about">
+					ABOUT
+				</a>
+			{{/if}}
+			</div>
+		</div>
+		<div class="index-user">
+			{{#if images}}
+				{{> images}}
+			{{/if}}
+			{{#if comments}}
+				<div class="comments-user">
+					{{> comments}}
+				</div>
+			{{/if}}
+			{{#if about}}
+				{{> about}}
+			{{/if}}
+		</div>
+	</div>
+</div>

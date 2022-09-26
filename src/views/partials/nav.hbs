@@ -1,19 +1,29 @@
 <nav class="nav">
-	<div class="nav-img"><a href="/"><img src="/img/imgshare-logo.png"></a></div>
-	<div class="nav-search">
-		<form action="/search">
-			<input type="text" class="nav-input" name="q" placeholder="Search">
-			<button class="nav-btn" href="/gallery" aria-label="Search" ><i class="fa-solid fa-magnifying-glass"></i></button>
+	<div class="img-nav">
+		<a class="link-img-nav" href="/">
+			<img class="image-img-nav" src="/img/imgshare-logo.png">
+		</a>
+	</div>
+	<div class="search-nav">
+		<form class="form-nav" action="/search">
+			<input type="search" class="input-nav" name="q" placeholder="Search">
+			<button class="btn-nav" href="/gallery" aria-label="Search">
+				<i class="fa-solid fa-magnifying-glass"></i>
+			</button>
 		</form>
 	</div>
 	{{#if user}}
-	<div>
-		<div><a href="/logout">Logout</a></div>
+	<div class="out-nav">
+		<img src="/uploads/avatars/{{user.avatar}}" class="avatar-nav" data-id="{{user.username}}">
 	</div>
 	{{else}}
-	<div class="nav-sign">
-		<a class="nav-login" href="/login">Log In</a>
-		<a class="nav-signup" href="/signup">Sign Up</a>
+	<div class="sign-nav">
+		<a class="login-nav" href="/login">
+			Log In
+		</a>
+		<a class="signup-nav" href="/signup">
+			Sign Up
+		</a>
 	</div>
 	{{/if}}
 </nav>

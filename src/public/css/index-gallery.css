@@ -1,0 +1,41 @@
+
+/* INDEX GALLERY */
+
+.index-gallery {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, 240px);
+	grid-auto-rows: min-content;
+	justify-content: center;
+	width: 100%;
+	min-height: 100%;
+	padding: 10px;
+	gap: 10px;
+}
+
+.box-gallery {
+	width: 240px;
+	height: 240px;
+	overflow: hidden;
+	background: #fff;
+}
+
+.link-gallery {
+	display: flex;
+	position: absolute;
+	width: 240px;
+	height: 240px;
+	background-color: transparent;
+	z-index: 50;
+}
+
+.text-gallery {
+	display: block;
+	align-self: flex-end;
+	width: 100%;
+	padding: 5px;
+	background: #999;
+}
+
+.image-gallery {
+	width: 100%;
+}

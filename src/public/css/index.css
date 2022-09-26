@@ -1,0 +1,49 @@
+
+*,
+*:before,
+*:after {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+
+* {
+	font-family: 'Quicksand', Helvetica, sans-serif;
+}
+
+body {
+	padding-top: 56px;
+	background: #dcdde1;
+}
+
+textarea {
+	resize: none;
+}
+
+a {
+	color: #000;
+	text-decoration: none;
+}
+
+.main-container {
+	display: grid;
+	position: absolute;
+	width: 100%;
+	min-height: calc(100% - 56px);
+}
+
+.secondary-container {
+	width: 80%;
+	max-width: 1520px;
+	min-width: 510px;
+  min-height: 100%;
+	margin: 0 auto;
+}
+
+.fa-thumbs-up {
+	cursor: pointer;
+}
+
+.fa-thumbs-down {
+	cursor: pointer;
+}

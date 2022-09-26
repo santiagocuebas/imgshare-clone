@@ -1,29 +1,110 @@
-<div class="container white">
-	<div class="main-image">
-		<div class="container-image">
-			<h1>{{image.title}} {{#if (isTrue user image.author)}}<button class="btn-delete" data-id="{{image.uniqueId}}">Delete</button>{{/if}} </h1>
-			<div>
-				<p><a href="/user/{{image.author}}">{{image.author}}</a></p>
-				<p><i class="fa-solid fa-eye"></i> {{image.views}} | {{timeago image.createdAt}}</p>
+<div class="main-container">
+	<div class="secondary-container">
+		<div class="main-image">
+			<div class="container-image">
+				<img src="/uploads/{{image.filename}}" class="img-image">
+				<div class="headers-image">
+					<div class="content-title-image">
+						<h1 class="title-image">
+							{{image.title}}
+						</h1>
+						{{#if (isTrue user.username image.author)}}
+							<button class="delete-image" data-id="{{image.uniqueId}}">
+								D
+							</button>
+						{{/if}}
+					</div>
+					<div class="content-body-image">
+						<div class="container-views-image ">
+							{{image.views}} views | {{timeago image.createdAt}}
+						</div>
+						{{#if user}}
+						<div class="container-likes-image">
+							<i id="like" data-id="{{image.uniqueId}}" class="fa-regular fa-thumbs-up"></i>
+							<p id="c-likes" class="like-image">
+								{{image.totalLikes}}
+							</p>
+							<i id="dislike" data-id="{{image.uniqueId}}" class="fa-regular fa-thumbs-down"></i>
+							<p id="c-dislike" class="dislike-image">
+								{{image.totalDislikes}}
+							</p>
+						</div>
+						{{else}}
+						<div class="container-likes-image">
+							<i class="fa-regular fa-thumbs-up"></i>
+							<p class="like-image">
+								{{image.totalLikes}}
+							</p>
+							<i class="fa-regular fa-thumbs-down"></i>
+							<p class="dislike-image">
+								{{image.totalDislikes}}
+							</p>
+						</div>
+						{{/if}}
+					</div>
+				</div>
+				<div class="body-image">
+					<div class="container-avatar-image">
+						<a href="/user/{{image.author}}">
+							<img src="/uploads/avatars/{{image.avatar}}" class="avatar-image" alt="avatar">
+						</a>
+					</div>
+					<div class="username-image">
+						<a href="/user/{{image.author}}">
+							{{image.author}}
+						</a>
+					</div>
+					<div class="description-image">
+						{{image.description}}
+					</div>
+				</div>
 			</div>
-			<img src="/uploads/{{image.filename}}" class="img">
-			<div>
-				<i id="like" data-id="{{image.uniqueId}}" class="fa-solid fa-thumbs-up"></i> <i id="c-likes">{{image.likes}}</i> <i id="dislike" data-id="{{image.filename}}" class="fa-solid fa-thumbs-down"></i> {{image.dislikes}}
+			<div class="container-sidebar">
+				<div class="box-sidebar">
+					<div class="order-sidebar">
+						RECENT UPLOADS
+					</div>
+					<div class="index-sidebar">
+						{{#each rImages}}
+						<a href="/gallery/{{uniqueId}}" class="link-sidebar">
+							<div class="sidebar">
+								<img src="/uploads/{{filename}}" class="image-sidebar">
+								<p class="text-sidebar">
+									{{title}}
+								</p>
+							</div>
+						</a>
+						{{/each}}
+					</div>
+				</div>
 			</div>
-			<div class="description">{{image.description}}</div>
-		</div>
-		<div class="sidebar"></div>
-		<div class="container-comments">
-			<div class="post-comment">
-				{{#if user}}
-				<form action="/gallery/{{image.uniqueId}}/comment" id="form-comment" method="POST">
-					<input id="input-comment" type="text" name="comment" class="input-comment" placeholder="Agrega un comentario..." required>
-				</form>
-				{{else}}
-				<div class="comment-noregister"><p>Register to comment!</p><a class="comment-login" href="/login">Log In</a><a class="comment-signup" href="/signup">Sign Up</a></div>
-				{{/if}}
+			<div class="container-comments">
+				<div class="post-comment">
+					{{#if user}}
+					<form action="/gallery/{{image.uniqueId}}/comment" id="form-comment" method="POST">
+						<input id="input-comment" type="text" name="comment" class="input-comment" placeholder="Agrega un comentario..." autocomplete="off" required>
+					</form>
+					{{else}}
+					<div class="noregister-comment">
+						<p class="paragraph-comment">
+							Register to comment!
+						</p>
+						<a class="login-comment" href="/login">
+							Log In
+						</a>
+						<a class="signup-comment" href="/signup">
+							Sign Up
+						</a>
+					</div>
+					{{/if}}
+				</div>
+				<div class="box-comments">
+					<div class="order-comments">
+						{{comments.length}} Comments
+					</div>
+					{{> comments}}
+				</div>
 			</div>
-			{{> comments}}
 		</div>
 	</div>
 </div>

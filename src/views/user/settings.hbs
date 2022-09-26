@@ -1,0 +1,185 @@
+<div class="container-settings">
+	<div class="head-settings">
+		<h1 class="title-settings">
+			Settings
+		</h1>
+	</div>
+	<div class="body-settings">
+		<div class="options-settings">
+			<div class="options-title-settings">
+				Set Avatar
+			</div>
+			<div class="options-body-settings">
+				<form class="form-settings" action="/settings/avatar" method="POST" enctype="multipart/form-data">
+					<div class="text-label-settings">
+						Change the avatar:
+					</div>
+					<input id="file-avatar" class="avatar-file-settings" type="file" name="image">
+					<label for="file-avatar" class="avatar-label-settings">
+						<img id="file-img" class="avatar-img-settings" src="">
+					</label>
+					<div class="container-avatar-settings">
+					</div>
+					<button class="btn-settings">
+						Send
+					</button>
+				</form>
+			</div>
+		</div>
+		<div class="options-settings">
+			<div class="options-title-settings">
+				Set Description
+			</div>
+			<div class="options-body-settings">
+				<form class="form-settings" action="/settings/description" method="POST">
+					<label class="text-label-settings">
+						Enter or change the description:
+					</label>
+					<textarea class="description-settings" name="userDescription" rows="10">{{user.description}}</textarea>
+					<button class="btn-settings">
+						Accept
+					</button>
+				</form>
+			</div>
+		</div>
+		<div class="options-settings">
+			<div class="options-title-settings">
+				Change Password
+			</div>
+			<div class="options-body-settings">
+				<form class="form-settings" action="/settings/password" method="POST">
+					<label class="label-settings">
+						<p class="text-label-settings">
+							Enter the old password:
+						</p>
+						<input type="password" class="input-settings" name="currentPassword">
+					</label>
+					<label class="label-settings">
+						<p class="text-label-settings">
+							Enter the new password:
+						</p>
+						<input type="password" class="input-settings" name="newPassword">
+					</label>
+					<label class="label-settings">
+						<p class="text-label-settings">
+							Confirm password:
+						</p>
+						<input type="password" class="input-settings" name="confirmPassword">
+					</label>
+					<button class="btn-settings">
+						Send
+					</button>
+				</form>
+			</div>
+		</div>
+		<div class="options-settings">
+			<div class="options-title-settings">
+				Change Email
+			</div>
+			<div class="options-body-settings">
+				<form class="form-settings" action="/settings/email" method="POST">
+					<label class="label-settings">
+						<p class="text-label-settings">
+							Enter the old email:
+						</p>
+						<input type="email" class="input-settings" name="currentEmail">
+					</label>
+					<label class="label-settings">
+						<p class="text-label-settings">
+							Enter the new email:
+						</p>
+						<input type="email" class="input-settings" name="newEmail">
+					</label>
+					<button class="btn-settings">
+						Send
+					</button>
+				</form>
+			</div>
+		</div>
+		<div class="options-settings">
+			<div class="options-title-settings">
+				Add Phone Number
+			</div>
+			<div class="options-body-settings">
+				<form class="form-settings" action="/settings/phone" method="POST">
+					<label class="label-settings">
+						<p class="text-label-settings">
+							Enter the phone number:
+						</p>
+						<input type="text" class="input-settings" name="phoneNumber">
+					</label>
+					<button class="btn-settings">
+						Send
+					</button>
+				</form>
+				{{#if user.phone_number}}
+				<form class="form-settings delete-settings" action="/settings/deletephone" method="POST">
+					<p class="container-number-settings">
+						Telephone: {{user.phone_number}}
+					</p>
+					<button class="btn-delete-settings">
+						<i class="fa-solid fa-xmark"></i>
+					</button>
+				</form>
+				{{/if}}
+			</div>
+		</div>
+		<div class="options-settings">
+			<div class="options-title-settings">
+				Add Links
+			</div>
+			<div class="options-body-settings">
+				<form class="form-settings" action="/settings/links" method="POST">
+					<label class="label-settings">
+						<p class="text-label-settings">
+							Enter the title:
+						</p>
+						<input type="text" class="input-settings" name="title">
+					</label>
+					<label class="label-settings">
+						<p class="text-label-settings">
+							Enter the URL:
+						</p>
+						<input type="url" class="input-settings" name="url">
+					</label>
+					<button class="btn-settings">
+						Send
+					</button>
+				</form>
+				{{#if user.links}}
+				{{#each (allLinks user.links)}}
+				<form class="form-settings delete-settings" action="/settings/deletelink" method="POST">
+					<input class="hidden-settings" type="text" name="title" value="{{title}}">
+					<input class="hidden-settings" type="url" name="url" value="{{url}}">
+					<p class="container-number-settings">
+						<a class="link-settings" href="{{url}}" target="_blank">
+							{{title}}
+						</a>
+					</p>
+					<button class="btn-delete-settings">
+						<i class="fa-solid fa-xmark"></i>
+					</button>
+				</form>
+				{{/each}}
+				{{/if}}
+			</div>
+		</div>
+		<div class="options-settings">
+			<div class="options-title-settings">
+				Delete User
+			</div>
+			<div class="options-body-settings">
+				<form class="form-settings" action="/settings/{{user.username}}" method="POST">
+					<label class="label-settings">
+						<p class="text-label-settings">
+							Delete user:
+						</p>
+					</label>
+					<button class="delete-user-settings">
+						Delete
+					</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
