@@ -11,23 +11,23 @@ import multer from 'multer';
 
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
-import { PORT } from './keys.js';
-import sequelize from './sequelize.js';
-import * as helpers from './helpers/helpers.js';
-import './database.js';
-import './lib/passport.js';
+import { sequelize } from './database.js';
+import * as helpers from './libs/helpers.js';
+import './auth/passport.js';
 
 // IndexRoutes
-import iRoutes from './routes/index.js';
-import aRoutes from './routes/auth.js';
-import gRoutes from './routes/gallery.js';
-import uRoutes from './routes/user.js';
-import sRoutes from './routes/settings.js';
+import {
+	mainRoute,
+	galleryRoute,
+	userRoute,
+	settingsRoute,
+	authRoute,
+	finalRoute
+} from './routes/index.js';
 
 // Initializations
 const app = express();
 const NewSequelizeStore = SequelizeStore(session.Store);
-const myStore = new NewSequelizeStore({ db: sequelize });
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 // Settings
@@ -48,14 +48,12 @@ app.use(express.json());
 app.use(session({
 	key: 'unaclavecualquiera',
 	secret: 'unacontraseñacualquiera',
-	store: myStore,
+	store: new NewSequelizeStore({ db: sequelize }),
 	resave: false,
 	saveUninitialized: false
 }));
-await myStore.sync();
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(multer({ dest: join(__dirname, './public/uploads/temp') }).single('image'));
 
 // Global Variables
 app.use((req, res, next) => {
@@ -63,24 +61,20 @@ app.use((req, res, next) => {
 	next();
 });
 
-// Routes
-app.use(iRoutes);
-app.use(aRoutes);
-app.use('/gallery', gRoutes);
-app.use('/user', uRoutes);
-app.use('/settings', sRoutes);
-
 // Static Files
+app.use(multer({ dest: join(__dirname, './public/uploads/temp') }).single('image'));
 app.use(express.static(join(__dirname, './public')));
 app.use('/uploads', express.static(join(__dirname, './uploads')));
 
-app.get('*', (req, res) => {
-	res.redirect('/');
-});
+// Routes
+app.use(mainRoute);
+app.use(authRoute);
+app.use('/gallery', galleryRoute);
+app.use('/user', userRoute);
+app.use('/settings', settingsRoute);
+app.use(finalRoute);
 
 // Error Handling
 if (process.env.NODE_ENV === 'development') app.use(error());
 
-// LISTENER
-app.listen(PORT);
-console.log('Server on port', PORT);
+export default app;

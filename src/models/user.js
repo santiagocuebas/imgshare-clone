@@ -1,7 +1,7 @@
 'use strict';
 
 import { DataTypes } from 'sequelize';
-import sequelize from '../sequelize.js';
+import { sequelize } from '../database.js';
 
 const User = sequelize.define('User', {
 	username: { type: DataTypes.STRING, allowNull: false, primaryKey: true },

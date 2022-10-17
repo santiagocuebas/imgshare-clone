@@ -1,18 +1,19 @@
-'use strict';
 
 import mongoose from 'mongoose';
+import { Sequelize } from 'sequelize';
+import {
+	DB_DATABASE,
+	DB_HOST,
+	DB_PASS,
+	DB_USER,
+	DB_PORT,
+	MONGO_URI
+} from './config.js';
 
-import { mongoDB } from './keys.js';
-import sequelize from './sequelize.js';
+export const mongod = await mongoose.connect(MONGO_URI);
 
-const mongod = await mongoose.connect(mongoDB.URI);
-
-if (mongod) console.log('MongoDB Database is Connected');
-else console.error('Ha ocurrido un error con ', mongod);
-
-try {
-	await sequelize.sync({ alter: false });
-	console.log('SQL Database is Connected');
-} catch (e) {
-	console.error(e);
-}
+export const sequelize = new Sequelize(DB_DATABASE, DB_USER, DB_PASS, {
+	port: DB_PORT,
+	host: DB_HOST,
+	dialect: 'mysql'
+});

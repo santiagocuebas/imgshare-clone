@@ -2,36 +2,13 @@
 
 import { Router } from 'express';
 import passport from 'passport';
-import { Op } from 'sequelize';
 import { check, validationResult } from 'express-validator';
-import { isLoggedIn, isNotLoggedIn } from '../lib/logged.js';
-import { matchPassword } from '../lib/crypt.js';
+import { isLoggedIn, isNotLoggedIn } from '../libs/logged.js';
+import { matchPassword } from '../auth/crypt.js';
 import { User } from '../models/index.js';
+import { getUser, getErrors } from '../libs/services.js';
 
 const router = Router();
-
-const getUser = value => {
-	return User.findOne({
-		where: {
-			[Op.or]: [
-				{ username: value },
-				{ email: value }
-			]
-		}
-	});
-};
-
-const getErrors = (value, errors) => {
-	const message = {};
-	const values = {
-		username: value.username,
-		email: value?.email
-	};
-	for (const e of errors) {
-		message[e.param] = e.msg;
-	};
-	return { message, values };
-};
 
 router.get('/signup', isNotLoggedIn, (req, res) => res.render('auth/signup'));
 
@@ -64,8 +41,14 @@ router.post('/signup', isNotLoggedIn,
 		}),
 	(req, res, next) => {
 		const err = validationResult(req);
-		if (!err.isEmpty()) res.render('auth/signup', getErrors(req.body, err.array()));
-		else passport.authenticate('signup', { successRedirect: '/' })(req, res, next);
+		if (!err.isEmpty()) {
+			const errors = getErrors(req.body, err.array());
+			res.render('auth/signup', errors);
+		} else {
+			passport.authenticate('signup', {
+				successRedirect: '/'
+			})(req, res, next);
+		};
 	}
 );
 
@@ -92,8 +75,14 @@ router.post('/login', isNotLoggedIn,
 		}),
 	(req, res, next) => {
 		const err = validationResult(req);
-		if (!err.isEmpty()) res.render('auth/login', getErrors(req.body, err.array()));
-		else passport.authenticate('login', { successRedirect: '/' })(req, res, next);
+		if (!err.isEmpty()) {
+			const errors = getErrors(req.body, err.array());
+			res.render('auth/login', errors);
+		} else {
+			passport.authenticate('login', {
+				successRedirect: '/'
+			})(req, res, next);
+		};
 	}
 );
 

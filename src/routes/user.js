@@ -2,16 +2,13 @@
 
 import { Router } from 'express';
 import { Image, Comment, User } from '../models/index.js';
-import { isLoggedIn } from '../lib/logged.js';
+import { isLoggedIn } from '../libs/logged.js';
 
 const router = Router();
 
-const getUser = username => {
-	return User.findOne({ where: { username } });
-};
-
 router.get('/:username', async (req, res) => {
-	const data = await getUser(req.params.username);
+	const { username } = req.params;
+	const data = await User.findOne({ where: { username } });
 	if (data) {
 		const { username, avatar } = data.dataValues;
 		const fUser = { username, avatar };
@@ -24,7 +21,8 @@ router.get('/:username', async (req, res) => {
 });
 
 router.get('/:username/post', async (req, res) => {
-	const data = await getUser(req.params.username);
+	const { username } = req.params;
+	const data = await User.findOne({ where: { username } });
 	if (data) {
 		const { username, avatar } = data.dataValues;
 		const fUser = { username, avatar };
@@ -37,7 +35,8 @@ router.get('/:username/post', async (req, res) => {
 });
 
 router.get('/:username/comments', async (req, res) => {
-	const data = await getUser(req.params.username);
+	const { username } = req.params;
+	const data = await User.findOne({ where: { username } });
 	if (data) {
 		const { username, avatar } = data.dataValues;
 		const fUser = { username, avatar };
@@ -50,7 +49,8 @@ router.get('/:username/comments', async (req, res) => {
 });
 
 router.get('/:username/about', async (req, res) => {
-	const data = await getUser(req.params.username);
+	const { username } = req.params;
+	const data = await User.findOne({ where: { username } });
 	if (data) {
 		const { username, avatar, description, createdAt, links, totalViews } = data.dataValues;
 		const fUser = { username, avatar, description, createdAt, links, totalViews };
@@ -70,7 +70,7 @@ router.get('/:username/settings', isLoggedIn, async (req, res) => {
 	const { username } = req.params;
 	const user = req.user;
 	if (user.username === username) {
-		const data = await getUser(req.params.username);
+		const data = await User.findOne({ where: { username } });
 		const settings = data.dataValues;
 		res.render('user/settings', { settings });
 	} else res.redirect(`/user/${user.username}/settings`);

@@ -4,20 +4,13 @@ import { Router } from 'express';
 import { check, validationResult } from 'express-validator';
 import { extname, resolve } from 'path';
 import fs from 'fs-extra';
-import { isLoggedIn } from '../lib/logged.js';
-import { encryptPassword, matchPassword } from '../lib/crypt.js';
-import { random } from '../helpers/random.js';
+import { isLoggedIn } from '../libs/logged.js';
+import { encryptPassword, matchPassword } from '../auth/crypt.js';
+import { random } from '../libs/random.js';
 import { Comment, Image, User } from '../models/index.js';
+import { getMessage } from '../libs/services.js';
 
 const router = Router();
-
-const getMessage = err => {
-	const message = {};
-	for (const e of err.array()) {
-		message[e.param] = e.msg;
-	}
-	return message;
-};
 
 router.post('/avatar', isLoggedIn, async (req, res) => {
 	if (req.file) {
@@ -111,8 +104,10 @@ router.post('/email', isLoggedIn,
 		}),
 	async (req, res) => {
 		const err = validationResult(req);
-		if (!err.isEmpty()) res.render('user/settings', getMessage(err));
-		else {
+		if (!err.isEmpty()) {
+			const message = getMessage(err);
+			res.render('user/settings', message);
+		} else {
 			const { username } = req.user;
 			await User.update({ email: req.body.newEmail },
 				{ where: { username } }
@@ -161,8 +156,10 @@ router.post('/links', isLoggedIn,
 		}),
 	async (req, res) => {
 		const err = validationResult(req);
-		if (!err.isEmpty()) res.render('user/settings', getMessage(err));
-		else {
+		if (!err.isEmpty()) {
+			const message = getMessage(err);
+			res.render('user/settings', message);
+		} else {
 			const { title, url } = req.body;
 			const { username } = req.user;
 			let { links } = req.user;
@@ -191,7 +188,9 @@ router.post('/deletelink', isLoggedIn, async (req, res) => {
 router.post('/:username', isLoggedIn, async (req, res, next) => {
 	const { username } = req.params;
 	const { avatar } = req.user;
-	if (avatar !== 'default.png') await fs.unlink(`./src/public/uploads/avatars/${avatar}`);
+	if (avatar !== 'default.png') {
+		await fs.unlink(`./src/public/uploads/avatars/${avatar}`);
+	}
 	const images = await Image.find({ author: username });
 	if (images.length > 0) {
 		for (const image of images) {

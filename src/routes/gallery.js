@@ -5,19 +5,12 @@ import fs from 'fs-extra';
 import { extname, resolve } from 'path';
 
 import { Image, Comment } from '../models/index.js';
-import { random } from '../helpers/random.js';
-import { recentUploads } from '../helpers/sidebar.js';
-import { isLoggedIn } from '../lib/logged.js';
+import { random } from '../libs/random.js';
+import { recentUploads } from '../libs/sidebar.js';
+import { isLoggedIn } from '../libs/logged.js';
+import { getCommentId } from '../libs/services.js';
 
 const router = Router();
-
-const getCommentId = async imageId => {
-	const comments = await Comment.find({
-		image_dir: imageId
-	});
-	if (comments.length > 0) return (Math.max(...comments.map(c => c.id)) + 1);
-	else return 1;
-};
 
 router.get('/', async (req, res) => {
 	const images = await Image

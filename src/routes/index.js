@@ -1,15 +1,7 @@
-'use strict';
 
-import { Image } from '../models/index.js';
-import { Router } from 'express';
-const router = Router();
-
-router.get('/', async (req, res) => {
-	const images = await Image
-		.find()
-		.sort({ createdAt: -1 })
-		.lean({ virtuals: true });
-	res.render('index', { images });
-});
-
-export default router;
+export { default as mainRoute } from './main.js';
+export { default as galleryRoute } from './gallery.js';
+export { default as userRoute } from './user.js';
+export { default as settingsRoute } from './settings.js';
+export { default as authRoute } from './auth.js';
+export { default as finalRoute } from './final.js';
