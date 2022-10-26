@@ -1,4 +1,3 @@
-'use strict';
 
 import express from 'express';
 import { engine } from 'express-handlebars';
@@ -8,7 +7,6 @@ import logger from 'morgan';
 import passport from 'passport';
 import error from 'errorhandler';
 import multer from 'multer';
-
 import { join, dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { sequelize } from './database.js';
@@ -27,8 +25,8 @@ import {
 
 // Initializations
 const app = express();
-const NewSequelizeStore = SequelizeStore(session.Store);
-const __dirname = dirname(fileURLToPath(import.meta.url));
+const SessionStore = SequelizeStore(session.Store);
+const __dirname: string = dirname(fileURLToPath(import.meta.url));
 
 // Settings
 app.set('views', join(__dirname, './views'));
@@ -46,9 +44,8 @@ app.use(logger('dev'));
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(session({
-	key: 'unaclavecualquiera',
 	secret: 'unacontraseñacualquiera',
-	store: new NewSequelizeStore({ db: sequelize }),
+	store: new SessionStore({ db: sequelize }),
 	resave: false,
 	saveUninitialized: false
 }));
@@ -56,9 +53,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Global Variables
-app.use((req, res, next) => {
-	app.locals.user = req.user || null;
-	next();
+app.use((req, _res, next) => {
+	app.locals.user = req.user;
+	return next();
 });
 
 // Static Files

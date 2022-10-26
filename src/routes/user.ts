@@ -1,4 +1,3 @@
-'use strict';
 
 import { Router } from 'express';
 import { Image, Comment, User } from '../models/index.js';
@@ -8,53 +7,74 @@ const router = Router();
 
 router.get('/:username', async (req, res) => {
 	const { username } = req.params;
-	const data = await User.findOne({ where: { username } });
-	if (data) {
-		const { username, avatar } = data.dataValues;
+	const user = await User.findOne({ where: { username } });
+	
+	if (user) {
+		const { username, avatar } = user;
 		const fUser = { username, avatar };
 		const images = await Image
 			.find({ author: fUser.username })
 			.sort({ timestamp: 1 })
 			.lean({ virtuals: true });
+
 		res.render('user/user', { fUser, images });
 	} else res.redirect('/');
 });
 
 router.get('/:username/post', async (req, res) => {
 	const { username } = req.params;
-	const data = await User.findOne({ where: { username } });
-	if (data) {
-		const { username, avatar } = data.dataValues;
+	const user = await User.findOne({ where: { username } });
+
+	if (user) {
+		const { username, avatar } = user;
 		const fUser = { username, avatar };
 		const images = await Image
 			.find({ author: fUser.username })
 			.sort({ timestamp: 1 })
 			.lean({ virtuals: true });
+
 		res.render('user/user', { fUser, images });
 	} else res.redirect('/');
 });
 
 router.get('/:username/comments', async (req, res) => {
 	const { username } = req.params;
-	const data = await User.findOne({ where: { username } });
-	if (data) {
-		const { username, avatar } = data.dataValues;
+	const user = await User.findOne({ where: { username } });
+
+	if (user) {
+		const { username, avatar } = user;
 		const fUser = { username, avatar };
 		const comments = await Comment
 			.find({ receiver: fUser.username })
 			.sort({ timestamp: -1 })
 			.lean();
+
 		res.render('user/user', { fUser, comments });
 	} else res.redirect('/');
 });
 
 router.get('/:username/about', async (req, res) => {
 	const { username } = req.params;
-	const data = await User.findOne({ where: { username } });
-	if (data) {
-		const { username, avatar, description, createdAt, links, totalViews } = data.dataValues;
-		const fUser = { username, avatar, description, createdAt, links, totalViews };
+	const user = await User.findOne({ where: { username } });
+	if (user) {
+		const {
+			username,
+			avatar,
+			description,
+			creationDate,
+			links,
+			totalViews
+		} = user;
+		const fUser = {
+			username,
+			avatar,
+			description,
+			creationDate,
+			links,
+			totalViews
+		};
 		const about = true;
+
 		res.render('user/user', { fUser, about });
 	} else res.redirect('/');
 });
@@ -62,18 +82,18 @@ router.get('/:username/about', async (req, res) => {
 router.get('/:username/upload', isLoggedIn, (req, res) => {
 	const { username } = req.params;
 	const user = req.user;
-	if (user.username === username) res.render('user/upload');
-	else res.redirect(`/user/${user.username}/upload`);
+	if (user && user.username === username) res.render('user/upload');
+	else res.redirect(`/user/${user?.username}/upload`);
 });
 
 router.get('/:username/settings', isLoggedIn, async (req, res) => {
 	const { username } = req.params;
 	const user = req.user;
-	if (user.username === username) {
-		const data = await User.findOne({ where: { username } });
-		const settings = data.dataValues;
-		res.render('user/settings', { settings });
-	} else res.redirect(`/user/${user.username}/settings`);
+	if (user && user.username === username) {
+		const user = await User.findOne({ where: { username } });
+		
+		res.render('user/settings', { settings: user });
+	} else res.redirect(`/user/${user!.username}/settings`);
 });
 
 export default router;
