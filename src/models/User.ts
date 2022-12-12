@@ -12,10 +12,12 @@ import {
 	UpdatedAt
 } from 'sequelize-typescript';
 
+import { UserData, UserCreationData } from '../types.js';
+
 @Table({
 	tableName: 'User'
 })
-class User extends Model {
+class User extends Model<UserData, UserCreationData> {
 	@AllowNull(false)
 	@PrimaryKey
 	@Column

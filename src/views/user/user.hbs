@@ -60,14 +60,15 @@
 		<div class="index-user">
 			{{#if images}}
 				{{> images}}
-			{{/if}}
-			{{#if comments}}
+			{{else if comments}}
 				<div class="comments-user">
 					{{> comments}}
 				</div>
-			{{/if}}
-			{{#if about}}
+			{{else if about}}
 				{{> about}}
+			{{else}}
+				<p>Has not uploaded any image yet</p>
+				<a href="/user/{{fUser.username}}/upload">Start now</a>
 			{{/if}}
 		</div>
 	</div>

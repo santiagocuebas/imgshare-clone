@@ -1,7 +1,7 @@
 
 import { Op } from 'sequelize';
 import { ValidationError } from 'express-validator';
-import { MessageData, ErrorMessage } from '../types.js';
+import { MessageData } from '../types.js';
 import { User, Comment } from '../models/index.js';
 
 export const getUser = (value: string): Promise<User | null> => {
@@ -15,15 +15,14 @@ export const getUser = (value: string): Promise<User | null> => {
 	});
 };
 
-export const getErrorMessage = (
-	values: MessageData,
-	errors: ValidationError[]
-): ErrorMessage => {
+export const getErrorMessage = (errors: ValidationError[]): MessageData => {
 	const message: MessageData = {};
+
 	for (const e of errors) {
 		message[e.param] = e.msg;
 	}
-	return { message, values };
+
+	return message;
 };
 
 export const getCommentId = async (imageId: number): Promise<number> => {
@@ -34,10 +33,9 @@ export const getCommentId = async (imageId: number): Promise<number> => {
 	else return 1;
 };
 
-export const getMessage = (err: ValidationError[]) => {
-	const message: MessageData = {};
-	for (const e of err) {
-		message[e.param] = e.msg;
-	}
-	return message;
+export const getResponse = (text: string, message: string): object => {
+	return {
+		class: text,
+		message
+	};
 };

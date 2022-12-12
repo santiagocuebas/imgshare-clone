@@ -1,12 +1,12 @@
 
-import { Request, Response, NextFunction } from 'express';
+import { Authenticate } from '../types.js';
 
-export const isLoggedIn = (req: Request, res: Response, next: NextFunction) => {
+export const isLoggedIn: Authenticate = (req, res, next) => {
 	if (req.isAuthenticated()) return next();
 	return res.redirect('/');
 };
 
-export const isNotLoggedIn = (req: Request, res: Response, next: NextFunction) => {
+export const isNotLoggedIn: Authenticate = (req, res, next) => {
 	if (!req.isAuthenticated()) return next();
 	return res.redirect('/');
 };

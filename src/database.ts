@@ -21,5 +21,6 @@ export const sequelize = new Sequelize({
 	host: DB_HOST,
 	dialect: 'mysql',
 	models: [User],
-	query: { raw: true }
+	query: { raw: true },
+	logging: false
 });

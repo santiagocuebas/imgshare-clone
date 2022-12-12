@@ -1,26 +1,18 @@
 
 import { Router } from 'express';
-import {
-	check,
-	validationResult,
-	Result,
-	ValidationError
-} from 'express-validator';
 import { extname, resolve } from 'path';
 import fs from 'fs-extra';
 import { isLoggedIn } from '../libs/logged.js';
 import { encryptPassword } from '../auth/crypt.js';
 import { random } from '../libs/random.js';
 import { Comment, Image, User } from '../models/index.js';
-import { getMessage } from '../libs/services.js';
+import { validateSettings } from '../libs/validations.js';
 import {
-	isValidEmail,
-	confirmPassword,
-	isCorrectCurrentPassword,
-	isCorrectEmail,
-	isValidLinkTitle,
-	isValidLinkURL
-} from '../libs/customValidators.js';
+	arrayPassword,
+	arrayEmail,
+	arrayLinks
+} from '../libs/validationsArrays.js';
+import { getResponse } from '../libs/services.js';
 
 const router = Router();
 
@@ -64,81 +56,86 @@ router.post('/avatar', isLoggedIn, async (req, res) => {
 					await comment.save();
 				}
 
-				res.redirect('back');
+				const response = getResponse('success-settings', 'Your profile picture has been successfully updated');
+
+				res.json(response);
 			} else {
 				await fs.unlink(tempPath);
-				res.redirect('/');
+
+				const response = getResponse('errors-settings', 'An error occurred while updating your image');
+
+				res.json(response);
 			}
 		};
 		saveImage();
-	} else res.redirect('back');
+	} else {
+		const response = getResponse('errors-settings', 'An error occurred while updating your image');
+
+		res.json(response);
+	}
 });
 
 router.post('/description', isLoggedIn, async (req, res) => {
 	if (req.user !== undefined) {
-		const { username } = req.user!;
+		const { username } = req.user;
 
 		await User.update({ description: req.body.userDescription },
 			{ where: { username } }
 		);
 
-		res.redirect('back');
+		const response = getResponse('success-settings', 'Your description has been successfully updated');
+
+		res.json(response);
 	} else {
-		res.redirect('back');
+		const response = getResponse('errors-settings', 'There was an error updating your description');
+
+		res.json(response);
 	}
 });
 
-router.post('/password', isLoggedIn,
-	check('currentPassword')
-		.custom(isCorrectCurrentPassword),
-	check('newPassword', 'Enter a valid password')
-		.exists({ checkFalsy: true }).bail()
-		.matches(/\d/).withMessage('Password must contain a number').bail()
-		.isLength({ min: 4, max: 255 }).withMessage('Password must contain at least 5 characters'),
-	check('confirmPassword')
-		.custom(confirmPassword),
+router.post(
+	'/password',
+	isLoggedIn,
+	validateSettings(arrayPassword),
 	async (req, res) => {
-		const errs: Result<ValidationError> = validationResult(req);
-		
-		if (!errs.isEmpty()) {
-			res.render('settings.hbs', getMessage(errs.array()));
-		}
-		else {
-			const { username } = req.user!;
+		if (req.user !== undefined) {
+			const { username } = req.user;
 			const actPassword = await encryptPassword(req.body.newPassword);
 			
 			await User.update({ password: actPassword },
 				{ where: { username } }
 			);
 
-			res.redirect('back');
+			const response = getResponse('success-settings', 'Your password has been successfully updated');
+	
+			res.json(response);
+		} else {
+			const response = getResponse('errors-settings', 'There was an error updating your password');
+	
+			res.json(response);
 		}
 	}
 );
 
-router.post('/email',
+router.post(
+	'/email',
 	isLoggedIn,
-	check('currentEmail')
-		.custom(isCorrectEmail),
-	check('newEmail', 'Enter a valid e-mail')
-		.exists({ checkFalsy: true }).bail()
-		.isLength({ max: 255 }).bail()
-		.isEmail().bail()
-		.custom(isValidEmail),
+	validateSettings(arrayEmail),
 	async (req, res) => {
-		const errs = validationResult(req);
-
-		if (!errs.isEmpty()) {
-			const message = getMessage(errs.array());
-			res.render('user/settings', message);
-		} else {
+		if (req.user !== undefined) {
 			const { username } = req.user!;
 
 			await User.update({ email: req.body.newEmail },
 				{ where: { username } }
 			);
 
-			res.redirect('back');
+			const response = getResponse('success-settings', 'Your email has been successfully updated');
+	
+			res.json(response);
+		} else {
+			const response = getResponse('errors-settings', 'There was an error updating your email');
+	
+			res.json(response);
 		}
 	}
 );
@@ -154,15 +151,19 @@ router.post('/phone', isLoggedIn, async (req, res) => {
 			});
 		}
 
-		res.redirect('back');
+		const response = getResponse('success-settings', 'Your phone number has been successfully updated');
+
+		res.json(response);
 	} else {
-		res.redirect('back');
+		const response = getResponse('errors-settings', 'There was an error updating your phone number');
+
+		res.json(response);
 	}
 });
 
 router.post('/deletephone', isLoggedIn, async (req, res) => {
 	if (req.user !== undefined) {
-		const { username } = req.user!;
+		const { username } = req.user;
 
 		await User.update({ phoneNumber: '' }, {
 			where: { username }
@@ -170,36 +171,32 @@ router.post('/deletephone', isLoggedIn, async (req, res) => {
 
 		res.redirect('back');
 	} else {
-		res.redirect('back');
+		res.json('.');
 	}
 });
 
-router.post('/links',
+router.post(
+	'/links',
 	isLoggedIn,
-	check('title', 'Insert a value')
-		.exists({ checkFalsy: true }).bail()
-		.custom(isValidLinkTitle),
-	check('url', 'Insert a value')
-		.exists({ checkFalsy: true }).bail()
-		.isURL().withMessage('Not is a URL').bail()
-		.custom(isValidLinkURL),
+	validateSettings(arrayLinks),
 	async (req, res) => {
-		const errs = validationResult(req);
-
-		if (!errs.isEmpty()) {
-			const message = getMessage(errs.array());
-			res.render('user/settings', message);
-		} else {
+		if (req.user !== undefined) {
 			const { title, url } = req.body;
-			const { username } = req.user!;
-			let { links } = req.user!;
+			const { username } = req.user;
+			let { links } = req.user;
 			links += `${title}|${url}-`;
 
 			await User.update({ links }, {
 				where: { username }
 			});
 
-			res.redirect('back');
+			const response = getResponse('success-settings', 'Your link has been successfully updated');
+	
+			res.json(response);
+		} else {
+			const response = getResponse('errors-settings', 'There was an error updating your link');
+	
+			res.json(response);
 		}
 	}
 );
@@ -224,10 +221,9 @@ router.post('/deletelink', isLoggedIn, async (req, res) => {
 	}
 });
 
-router.post('/:username', isLoggedIn, async (req, res, next) => {
+router.post('/deleteuser', isLoggedIn, async (req, res, next) => {
 	if (req.user !== undefined) {
-		const { avatar } = req.user;
-		const { username } = req.params;
+		const { avatar, username } = req.user;
 
 		if (avatar !== 'default.png') {
 			await fs.unlink(`./src/public/uploads/avatars/${avatar}`);
@@ -258,10 +254,10 @@ router.post('/:username', isLoggedIn, async (req, res, next) => {
 		req.logout(async err => {
 			if (err) return next(err);
 			await User.destroy({ where: { username } });
-			res.redirect('/');
+			res.json('/');
 		});
 	} else {
-		res.redirect('back');
+		res.json('');
 	}
 });
 

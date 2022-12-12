@@ -61,11 +61,8 @@
 
 .error-sign {
 	display: flex;
-	padding: 6px 12px;
-	border: 2px solid #975858;
-	border-radius: 4px;
-	background: #d76868;
-	color: #500;
+	padding: 4px 4px;
+	color: rgb(216, 38, 38);
 	font-weight: 700;
 }
 

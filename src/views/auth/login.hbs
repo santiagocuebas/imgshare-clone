@@ -3,27 +3,14 @@
 	<div class="title-sign"> 
 		Log In!
 	</div>
-	<form action="/login" method="POST">
+	<form id="form-sign" action="/login" method="POST">
 		<div class="body-sign">
-			<div class="box-sign">
-				<input id="username" type="text" class="input-sign" name="username" maxlength="255" placeholder="Username or Email" {{#if values.username}} value="{{values.username}}" {{/if}}>
+			<div id="username" class="box-sign">
+				<input type="text" class="input-sign" name="username" maxlength="255" placeholder="Username or Email">
 			</div>
-			{{#if message.username}}
-			<div id="m-username" class="box-sign">
-				<div class="error-sign">{{message.username}}<i data-id="m-username" class="fa-solid fa-xmark i-sign"></i> </div>
+			<div id="password" class="box-sign">
+				<input type="password" class="input-sign" name="password" maxlength="255" placeholder="Password">
 			</div>
-			{{/if}}
-			<div class="box-sign">
-				<input id="password" type="password" class="input-sign" name="password" maxlength="255" placeholder="Password">
-			</div>
-			{{#if message.password}}
-			<div id="m-password" class="box-sign">
-				<div class="error-sign">
-					{{message.password}}
-					<i data-id="m-password" class="fa-solid fa-xmark i-sign"></i>
-				</div>
-			</div>
-			{{/if}}
 		</div>
 		<div class="box-sign">
 			<button class="button-sign">

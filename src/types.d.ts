@@ -1,4 +1,6 @@
 
+import { Request, Response, NextFunction } from 'express';
+import { Optional } from 'sequelize';
 import { User as IUser } from './models/index.js';
 
 declare global {
@@ -34,7 +36,7 @@ export interface IComment {
 	totalDislikes: number;
 }
 
-export interface DataUser {
+export interface UserData {
 	username: string;
   email: string;
   password: string;
@@ -43,14 +45,18 @@ export interface DataUser {
   avatar: string;
   links: string;
   totalViews: number;
-  createdAt: Date;
-  updatedAt: Date;
+  creationDate: Date;
+  updatedOn: Date;
 }
+
+export interface UserCreationData extends Optional<UserData, 'totalViews' | 'links' | 'avatar' | 'description' | 'phoneNumber'> {}
 
 export interface MessageData {
 	[index: string]: string
 }
 
-export interface ErrorMessage {
-	[index: string]: MessageData
-}
+export type Authenticate = (
+	req: Request,
+	res: Response,
+	next: NextFunction
+) => void;

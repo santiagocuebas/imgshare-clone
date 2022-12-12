@@ -6,10 +6,10 @@ import {
 	Result,
 	ValidationError
 } from 'express-validator';
-import { ErrorMessage } from '../types.js';
+import { MessageData } from '../types.js';
 import { getErrorMessage } from '../libs/services.js';
 
-export const validateLogin = (validations: ValidationChain[]) => {
+export const validateAuth = (validations: ValidationChain[]) => {
 	return async (req: Request, res: Response, next: NextFunction) => {
 		await Promise.all(validations.map(validation => validation.run(req)));
 
@@ -19,15 +19,13 @@ export const validateLogin = (validations: ValidationChain[]) => {
 			return next();
 		}
 
-		const errors: ErrorMessage = getErrorMessage(req.body, errs.array());
-		console.log(errs.array());
-		console.log(errors);
+		const errors: MessageData = getErrorMessage(errs.array());
 
 		res.json(errors);
 	};
 };
 
-export const validateSignup = (validations: ValidationChain[]) => {
+export const validateSettings = (validations: ValidationChain[]) => {
 	return async (req: Request, res: Response, next: NextFunction) => {
 		await Promise.all(validations.map(validation => validation.run(req)));
 
@@ -37,10 +35,13 @@ export const validateSignup = (validations: ValidationChain[]) => {
 			return next();
 		}
 
-		const errors: ErrorMessage = getErrorMessage(req.body, errs.array());
-		console.log(errs.array());
-		console.log(errors);
+		const errors: MessageData = getErrorMessage(errs.array());
 
-		res.json(errors);
+		const data = {
+			class: 'errors-settings',
+			message: errors
+		};
+
+		res.json(data);
 	};
 };

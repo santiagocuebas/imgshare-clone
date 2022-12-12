@@ -39,6 +39,7 @@
 }
 
 .options-body-settings {
+	height: fit-content;
 	margin-top: 12px;
 }
 
@@ -174,8 +175,9 @@
 }
 
 .delete-user-settings {
-	margin-top: 5px;
-	margin-left: auto;
+	display: block;
+	width: fit-content;
+	margin: auto;
 	padding: 8px 32px;
 	border: none;
 	outline: 1px solid #dddddd;
@@ -189,4 +191,26 @@
 
 .delete-user-settings:hover {
 	background-color: #fe4830;
+}
+
+.success-settings, .errors-settings {
+	position: fixed;
+	right: 0;
+	bottom: 0;
+	width: 200px;
+	margin-bottom: 5px;
+	margin-right: 5px;
+	padding: 10px;
+	border-radius: 8px;
+	font-size: 18px;
+	font-weight: 700;
+	z-index: 300;
+}
+
+.success-settings {
+	background-color: #42d41d;
+}
+
+.errors-settings {
+	background-color: #f55414;
 }

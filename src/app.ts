@@ -14,14 +14,7 @@ import * as helpers from './libs/helpers.js';
 import './auth/passport.js';
 
 // IndexRoutes
-import {
-	mainRoute,
-	galleryRoute,
-	userRoute,
-	settingsRoute,
-	authRoute,
-	finalRoute
-} from './routes/index.js';
+import * as route from './routes/index.js';
 
 // Initializations
 const app = express();
@@ -47,7 +40,10 @@ app.use(session({
 	secret: 'unacontraseñacualquiera',
 	store: new SessionStore({ db: sequelize }),
 	resave: false,
-	saveUninitialized: false
+	saveUninitialized: false,
+	cookie: {
+		sameSite: 'lax'
+	}
 }));
 app.use(passport.initialize());
 app.use(passport.session());
@@ -64,12 +60,12 @@ app.use(express.static(join(__dirname, './public')));
 app.use('/uploads', express.static(join(__dirname, './uploads')));
 
 // Routes
-app.use(mainRoute);
-app.use(authRoute);
-app.use('/gallery', galleryRoute);
-app.use('/user', userRoute);
-app.use('/settings', settingsRoute);
-app.use(finalRoute);
+app.use(route.main);
+app.use(route.auth);
+app.use('/gallery', route.gallery);
+app.use('/user', route.user);
+app.use('/settings', route.settings);
+app.use(route.final);
 
 // Error Handling
 if (process.env.NODE_ENV === 'development') app.use(error());

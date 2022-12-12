@@ -6,7 +6,7 @@ import { sequelize, mongod } from './database.js';
 
 // Connect Databases
 if (mongod) console.log('MongoDB Database is Connected');
-else console.error('Ha ocurrido un error con ', mongod);
+else console.error('An error has occurred with ', mongod);
 
 try {
 	await sequelize.sync({ alter: false });

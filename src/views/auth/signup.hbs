@@ -5,52 +5,20 @@
 	<div class="title-sign"> 
 		Sign Up!
 	</div>
-	<form action="/signup" method="POST">
+	<form id="form-sign" action="/signup" method="POST">
 		<div class="body-sign">
-			<div class="box-sign">
-				<input id="username" type="text" class="input-sign" name="username" maxlength="255" placeholder="Username" {{#if values.username}} value="{{values.username}}" {{/if}}>
+			<div id="username" class="box-sign">
+				<input type="text" class="input-sign" name="username" maxlength="255" placeholder="Username">
 			</div>
-			{{#if message.username}}
-			<div id="m-username" class="box-sign">
-				<div class="error-sign">
-					{{message.username}}
-					<i data-id="m-username" class="fa-solid fa-xmark i-sign"></i>
-				</div>
+			<div id="email" class="box-sign">
+				<input type="email" class="input-sign" name="email" maxlength="255" placeholder="Email">
 			</div>
-			{{/if}}
-			<div class="box-sign">
-				<input id="email" type="email" class="input-sign" name="email" maxlength="255" placeholder="Email" {{#if values.email}} value="{{values.email}}" {{/if}}>
+			<div id="password" class="box-sign">
+				<input type="password" class="input-sign" name="password" maxlength="255" placeholder="Password">
 			</div>
-			{{#if message.email}}
-			<div id="m-email" class="box-sign">
-				<div class="error-sign">
-					{{message.email}}
-					<i data-id="m-email" class="fa-solid fa-xmark i-sign"></i>
-				</div>
+			<div id="confirm_password" class="box-sign">
+				<input type="password" class="input-sign" name="confirm_password" maxlength="255" placeholder="Retype Password">
 			</div>
-			{{/if}}
-			<div class="box-sign">
-				<input id="password" type="password" class="input-sign" name="password" maxlength="255" placeholder="Password">
-			</div>
-			{{#if message.password}}
-			<div id="m-password" class="box-sign">
-				<div class="error-sign">
-					{{message.password}}
-					<i data-id="m-password" class="fa-solid fa-xmark i-sign"></i>
-				</div>
-			</div>
-			{{/if}}
-			<div class="box-sign">
-				<input id="confirm_password" type="password" class="input-sign" name="confirm_password" maxlength="255" placeholder="Retype Password">
-			</div>
-			{{#if message.confirm_password}}
-			<div id="m-confirm" class="box-sign">
-				<div class="error-sign">
-					{{message.confirm_password}}
-					<i data-id="m-confirm" class="fa-solid fa-xmark i-sign"></i>
-				</div>
-			</div>
-			{{/if}}
 		</div>
 		<div class="box-sign">
 			<button class="button-sign">

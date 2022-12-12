@@ -101,7 +101,7 @@
 				Add Phone Number
 			</div>
 			<div class="options-body-settings">
-				<form class="form-settings" action="/settings/phone" method="POST">
+				<form id="phoneNumber" class="form-settings" action="/settings/phone" method="POST">
 					<label class="label-settings">
 						<p class="text-label-settings">
 							Enter the phone number:
@@ -129,7 +129,7 @@
 				Add Links
 			</div>
 			<div class="options-body-settings">
-				<form class="form-settings" action="/settings/links" method="POST">
+				<form id="links" class="form-settings" action="/settings/links" method="POST">
 					<label class="label-settings">
 						<p class="text-label-settings">
 							Enter the title:
@@ -169,16 +169,9 @@
 				Delete User
 			</div>
 			<div class="options-body-settings">
-				<form class="form-settings" action="/settings/{{user.username}}" method="POST">
-					<label class="label-settings">
-						<p class="text-label-settings">
-							Delete user:
-						</p>
-					</label>
-					<button class="delete-user-settings">
-						Delete
-					</button>
-				</form>
+				<a class="delete-user-settings" href="/settings/deleteuser">
+					Delete
+				</a>
 			</div>
 		</div>
 	</div>
